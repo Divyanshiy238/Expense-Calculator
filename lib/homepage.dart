@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'package:expense_calculator/CRUD.dart';
+import 'package:expense_calculator/auth_controller.dart';
+import 'package:expense_calculator/data.dart';
 import 'package:flutter/material.dart';
-import 'loading_circle.dart';
-import 'plus_button.dart';
+import 'login_page.dart';
 import 'top_card.dart';
-import 'transaction.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -13,411 +15,335 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // collect user input
-  final _textcontrollerCategory = TextEditingController();
-  final _textcontrollerAMOUNT = TextEditingController();
-  final _textcontrollerTitle = TextEditingController();
-  final _textcontrollerITEM = TextEditingController();
-  final _textcontrollerDATE = TextEditingController();
+
+  TextEditingController _title = TextEditingController();
+  TextEditingController _amount = TextEditingController();
+  TextEditingController _date = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isIncome = false;
 
-  // enter the new transaction into the spreadsheet
-  void _enterTransaction() {
-      _textcontrollerITEM.text;
-      _textcontrollerAMOUNT.text;
-      _textcontrollerDATE.text;
-      _isIncome;
-    setState(() {});
-  }
-
-  // new transaction
-  void _newTransaction() {
-    showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (BuildContext context) {
-          return StatefulBuilder(
-            builder: (BuildContext context, setState) {
-              return AlertDialog(
-                title: Text('N E W  T R A N S A C T I O N'),
-                content: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text('Expense'),
-                          Switch(
-                            value: _isIncome,
-                            onChanged: (newValue) {
-                              setState(() {
-                                _isIncome = newValue;
-                              });
-                            },
-                          ),
-                          Text('Income'),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Form(
-                              child: TextFormField(
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  hintText: 'Title',
-                                ),
-                                validator: (text) {
-                                  if (text == null || text.isEmpty) {
-                                    return 'Enter a Category';
-                                  }
-                                  return null;
-                                },
-                                controller: _textcontrollerTitle,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Form(
-                              key: _formKey,
-                              child: TextFormField(
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  hintText: 'Amount',
-                                ),
-                                validator: (text) {
-                                  if (text == null || text.isEmpty) {
-                                    return 'Enter an amount';
-                                  }
-                                  return null;
-                                },
-                                controller: _textcontrollerAMOUNT,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Form(
-                              child: TextFormField(
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  hintText: 'Category',
-                                ),
-                                validator: (text) {
-                                  if (text == null || text.isEmpty) {
-                                    return 'Enter a Category';
-                                  }
-                                  return null;
-                                },
-                                controller: _textcontrollerCategory,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                hintText: 'Description',
-                              ),
-                              controller: _textcontrollerITEM,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                hintText: 'Date & Time',
-                              ),
-                              controller: _textcontrollerDATE,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                actions: <Widget>[
-                  MaterialButton(
-                    color: Colors.grey[600],
-                    child:
-                    Text('Cancel', style: TextStyle(color: Colors.white)),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  MaterialButton(
-                    color: Colors.grey[600],
-                    child:
-                    Text('Edit', style: TextStyle(color: Colors.white)),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  MaterialButton(
-                    color: Colors.grey[600],
-                    child: Text('Enter', style: TextStyle(color: Colors.white)),
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        _enterTransaction();
-                        Navigator.of(context).pop();
-                      }
-                    },
-                  )
-                ],
-              );
-            },
-          );
-        });
-  }
-  void _EditTransaction() {
-    showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (BuildContext context) {
-          return StatefulBuilder(
-            builder: (BuildContext context, setState) {
-              return AlertDialog(
-                title: Text('E D I T  T R A N S A C T I O N'),
-                content: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text('Expense'),
-                          Switch(
-                            value: _isIncome,
-                            onChanged: (newValue) {
-                              setState(() {
-                                _isIncome = newValue;
-                              });
-                            },
-                          ),
-                          Text('Income'),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Form(
-                              child: TextFormField(
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  hintText: 'Title',
-                                ),
-                                validator: (text) {
-                                  if (text == null || text.isEmpty) {
-                                    return 'Enter a Category';
-                                  }
-                                  return null;
-                                },
-                                controller: _textcontrollerTitle,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Form(
-                              key: _formKey,
-                              child: TextFormField(
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  hintText: 'Amount',
-                                ),
-                                validator: (text) {
-                                  if (text == null || text.isEmpty) {
-                                    return 'Enter an amount';
-                                  }
-                                  return null;
-                                },
-                                controller: _textcontrollerAMOUNT,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Form(
-                              child: TextFormField(
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  hintText: 'Category',
-                                ),
-                                validator: (text) {
-                                  if (text == null || text.isEmpty) {
-                                    return 'Enter a Category';
-                                  }
-                                  return null;
-                                },
-                                controller: _textcontrollerCategory,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                hintText: 'Description',
-                              ),
-                              controller: _textcontrollerITEM,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                hintText: 'Date & Time',
-                              ),
-                              controller: _textcontrollerDATE,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                actions: <Widget>[
-                  MaterialButton(
-                    color: Colors.grey[600],
-                    child:
-                    Text('Cancel', style: TextStyle(color: Colors.white)),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  MaterialButton(
-                    color: Colors.grey[600],
-                    child:
-                    Text('Edit', style: TextStyle(color: Colors.white)),
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        _EditTransaction();
-                        Navigator.of(context).pop();
-                      };
-                    },
-                  ),
-                  MaterialButton(
-                    color: Colors.grey[600],
-                    child: Text('Enter', style: TextStyle(color: Colors.white)),
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        _enterTransaction();
-                        Navigator.of(context).pop();
-                      }
-                    },
-                  )
-                ],
-              );
-            },
-          );
-        });
-  }
-  // wait for the data to be fetched from google sheets
-  bool timerHasStarted = false;
-  void startLoading() {
-    timerHasStarted = true;
-    Timer.periodic(Duration(seconds: 1), (timer) {
+  @override
+  void initState() {
+    super.initState();
+    fetchBalance().then((value) {
+      setState(() {
+        print('Fetched');
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // start loading until the data arrives
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () {
+              AuthenticationHelper().signOut();
+              Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => LoginPage()));
+            },
+            color: Colors.black,
+          )
+        ],
+      ),
       backgroundColor: Colors.grey[300],
-      body: Padding(
-        padding: const EdgeInsets.all(25.0),
-        child: Column(
-          children: [
-            SizedBox(
-              height: 30,
-            ),
-            TopNeuCard(
-              balance: '\ 20,0000',
-              income: '\ 100',
-              expense: '\ 50',
-            ),
-            Expanded(
-              child: Container(
-                child: Center(
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 20,
-                      ),
-                      MyTransaction(transactionName: 'Free Lancing',
-                          money: '10000',
-                          expenseOrIncome: 'Income')
-                    ],
-                  ),
-                ),
+      body: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 20.0),
+          child: Column(
+            children: [
+              TopNeuCard(
+                balance: Data.totalBalance.toString(),
+                income: Data.totalIncome.toString(),
+                expense: Data.totalExpenses.toString(),
               ),
-            ),
-            PlusButton(
-              function: _newTransaction,
-            ),
-          ],
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 15),
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance.collection('allExpensesAndIncome').snapshots(),
+                  builder: (context, snapshot){
+                    if(!snapshot.hasData){
+                      return CircularProgressIndicator();
+                    }
+                    else if(snapshot.hasError){
+                      return Center(
+                        child: Text('An error occurred'),
+                      );
+                    }
+                    else{
+                     return ListView.builder(
+                       itemCount: snapshot.data!.docs.length,
+                       shrinkWrap: true,
+                       physics: BouncingScrollPhysics(),
+                       itemBuilder: (context, index){
+                         return Dismissible(
+                           key: Key(snapshot.data!.docs[index].id),
+                           background: Container(
+                             color: Colors.deepPurple.withOpacity(0.4),
+                           ),
+                           onDismissed: (direction){
+                             CRUD.deleteItem(snapshot.data!.docs[index].id, snapshot.data!.docs[index].data() as Map<String, dynamic>).then((value){
+                               if(value){
+                                 setState(() {
+                                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Data Successfully Deleted')));
+                                 });
+                               }
+                               else{
+                                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error occurred')));
+                               }
+                             });
+                           },
+                           child: Card(
+                             elevation: 2.0,
+                             shape: RoundedRectangleBorder(
+                                 borderRadius: BorderRadius.circular(10)
+                             ),
+                             child: ListTile(
+                               onTap: (){
+                                 _amount.text = snapshot.data!.docs[index]['amount'].toString();
+                                 _title.text = snapshot.data!.docs[index]['title'];
+                                 _date.text = snapshot.data!.docs[index]['date'];
+                                 _isIncome = snapshot.data!.docs[index]['expenseOrIncome'];
+
+                                 _transaction('Update', snapshot.data!.docs[index].id, snapshot.data!.docs[index].data() as Map<String, dynamic>);
+                               },
+                               shape: RoundedRectangleBorder(
+                                 borderRadius: BorderRadius.circular(10)
+                               ),
+                               tileColor: Colors.grey[100],
+                               title: Text(snapshot.data!.docs[index]['title'],
+                                   style: TextStyle(
+                                     fontSize: 16,
+                                     color: Colors.grey[700],
+                                   )),
+                               subtitle: Text(snapshot.data!.docs[index]['date'],
+                                   style: TextStyle(
+                                     fontSize: 12,
+                                     color: Colors.grey[500],
+                                   )),
+                               trailing: Text(
+                                 (snapshot.data!.docs[index]['expenseOrIncome'] ? '+' : '-') + Data.rssymbol + snapshot.data!.docs[index]['amount'].toString(),
+                                 style: TextStyle(
+                                   fontSize: 16,
+                                   color: snapshot.data!.docs[index]['expenseOrIncome'] ? Colors.green : Colors.red,
+                                 ),
+                               ),
+                             ),
+                           ),
+                         );
+                       },
+                     );
+                    }
+                  },
+                )
+              ),
+            ],
+          ),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: ( )=> _transaction('Add'),
+        child: Icon(Icons.add),
+        backgroundColor: Colors.deepPurple,
+      ),
     );
+  }
+
+  Future<bool> fetchBalance() async {
+    DocumentSnapshot balance = await FirebaseFirestore.instance.collection('balance').doc('data').get();
+    print(balance.data());
+    Map<String, dynamic> data = balance.data() as Map<String, dynamic>;
+    Data.totalBalance = data['totalBalance'];
+    Data.totalExpenses = data['totalExpenses'];
+    Data.totalIncome = data['totalIncome'];
+    return true;
+  }
+
+  void _transaction(String action, [String id = '', Map<String, dynamic>? oldData]) {
+    _date.text = DateTime.now().toString().substring(0,10);
+    bool _loading = false;
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+            builder: (BuildContext context, setState) {
+              return AlertDialog(
+                title: Text('$action Transaction'),
+                content: SingleChildScrollView(
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text('Expense'),
+                            Switch(
+                              value: _isIncome,
+                              onChanged: (newValue) {
+                                setState(() {
+                                  _isIncome = newValue;
+                                });
+                              },
+                            ),
+                            Text('Income'),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  hintText: 'Title',
+                                ),
+                                validator: (text) {
+                                  if (text == null || text.isEmpty) {
+                                    return 'Enter Title';
+                                  }
+                                  return null;
+                                },
+                                controller: _title,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  hintText: 'Amount',
+                                ),
+                                validator: (text) {
+                                  if (text == null || text.isEmpty) {
+                                    return 'Enter an amount';
+                                  }
+                                  return null;
+                                },
+                                controller: _amount,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                readOnly: true,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  hintText: 'Date',
+                                ),
+                                controller: _date,
+                                onTap: () async {
+                                    var date =  await showDatePicker(
+                                        context: context,
+                                        initialDate: DateTime.now(),
+                                        firstDate: DateTime.now().subtract(Duration(days: 14)),
+                                        lastDate: DateTime.now());
+                                    _date.text = date.toString().substring(0,10);
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                actions: <Widget>[
+                  MaterialButton(
+                    color: Colors.deepPurple.withOpacity(0.4),
+                    child:
+                    Text('Cancel', style: TextStyle(color: Colors.white)),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  MaterialButton(
+                    color: Colors.deepPurple.withOpacity(0.4),
+                    child: _loading ? Container(
+                      margin: EdgeInsets.all(5),
+                        child: CircularProgressIndicator(
+                          color: Colors.deepPurpleAccent,
+                        )
+                    ) : Text(action, style: TextStyle(color: Colors.white)),
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        setState((){
+                          _loading = true;
+                        });
+                        if(action == "Add"){
+                          await CRUD.addItem({
+                            'amount' : int.parse(_amount.text),
+                            'date' : _date.text,
+                            'title' : _title.text,
+                            'expenseOrIncome' : _isIncome
+                          }).then((value){
+                            if(value){
+                              print('Success');
+                              _date.clear();
+                              _title.clear();
+                              _amount.clear();
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Data Successfully Added')));
+                            }
+                            else{
+                              print('Failed');
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('An error occurred')));
+                            }
+                          });
+                        }
+                        else{
+                          await CRUD.updateItem(id, {
+                            'amount' : int.parse(_amount.text),
+                            'date' : _date.text,
+                            'title' : _title.text,
+                            'expenseOrIncome' : _isIncome
+                          }, oldData!).then((value){
+                            if(value){
+                              print('Success');
+                              _date.clear();
+                              _title.clear();
+                              _amount.clear();
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Data Successfully Updated')));
+                            }
+                            else{
+                              print('Failed');
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('An error occurred')));
+                            }
+                          });
+                        }
+                        setState((){
+                          _loading = false;
+                        });
+                        Navigator.of(context).pop();
+                      }
+                    },
+                  )
+                ],
+              );
+            },
+          );
+        }).then((value){
+       setState(() {
+         print('Updating');
+       });
+    });
   }
 }

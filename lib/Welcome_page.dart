@@ -66,8 +66,8 @@ class WelcomePage extends StatelessWidget {
           ),
           SizedBox(height:250,),
           GestureDetector(
-            onTap:(){
-              AuthController.instance.logOut();
+            onTap:() async {
+              await AuthenticationHelper().signOut();
             },
             child: Container(
               width: w*0.5,

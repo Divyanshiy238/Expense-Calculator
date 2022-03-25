@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 class MyTransaction extends StatelessWidget {
   final String transactionName;
   final String money;
-  final String expenseOrIncome;
+  final bool expenseOrIncome;
+  final String date;
 
   MyTransaction({
     required this.transactionName,
     required this.money,
     required this.expenseOrIncome,
+    required this.date
   });
 
   @override
@@ -39,20 +41,30 @@ class MyTransaction extends StatelessWidget {
                   SizedBox(
                     width: 10,
                   ),
-                  Text(transactionName,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey[700],
-                      )),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(transactionName,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey[700],
+                          )),
+                      Text(date,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey[500],
+                          )),
+                    ],
+                  ),
                 ],
               ),
               Text(
-                (expenseOrIncome == 'expense' ? '-' : '+') + '\$' + money,
+                (expenseOrIncome ? '-' : '+') + '\$' + money,
                 style: TextStyle(
                   //fontWeight: FontWeight.bold,
                   fontSize: 16,
                   color:
-                      expenseOrIncome == 'expense' ? Colors.red : Colors.green,
+                      expenseOrIncome ? Colors.red : Colors.green,
                 ),
               ),
             ],

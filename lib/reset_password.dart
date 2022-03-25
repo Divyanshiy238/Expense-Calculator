@@ -1,13 +1,7 @@
-import 'package:expense_calculator/Signup_page.dart';
-import 'package:expense_calculator/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'auth_controller.dart';
 
 class ForgotPassword extends StatefulWidget {
   ForgotPassword({Key? key}) : super(key: key);
@@ -182,8 +176,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           SizedBox(height:10,),
           RichText(
               text:TextSpan(
-                  recognizer: TapGestureRecognizer()..onTap=()=>Get.back(),
-                  text:"Remmember your password?",
+                  recognizer: TapGestureRecognizer()..onTap=()=>Navigator.of(context).pop(),
+                  text:"Remember your password?",
                   style:TextStyle(
                       fontSize:20,
                       color:Colors.grey[500]

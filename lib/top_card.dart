@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'data.dart';
 
 class TopNeuCard extends StatelessWidget {
   final String balance;
@@ -21,11 +22,14 @@ class TopNeuCard extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text('T O T A L  B A L A N C E',
-                  style: TextStyle(color: Colors.grey[500], fontSize: 16)),
+              Text('Total Balance',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 32)),
               Text(
-                '\$' + balance,
-                style: TextStyle(color: Colors.grey[800], fontSize: 35),
+                Data.rssymbol + balance,
+                style: TextStyle(color: Colors.white, fontSize: 35),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -54,11 +58,13 @@ class TopNeuCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text('Total Income',
-                                style: TextStyle(color: Colors.grey[500],fontSize: 15)),
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 15)),
                             SizedBox(
                               height: 5,
                             ),
-                            Text('\$' + income,
+                            Text(Data.rssymbol + income,
                                 style: TextStyle(
                                     color: Colors.grey[600],
                                     fontSize: 20,
@@ -89,11 +95,11 @@ class TopNeuCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text('Total Expense',
-                                style: TextStyle(color: Colors.grey[500],fontSize: 15)),
+                                style: TextStyle(color: Colors.black,fontSize: 15)),
                             SizedBox(
                               height: 5,
                             ),
-                            Text('\$' + expense,
+                            Text(Data.rssymbol + expense,
                                 style: TextStyle(
                                     color: Colors.grey[600],
                                     fontSize: 20,
@@ -111,6 +117,12 @@ class TopNeuCard extends StatelessWidget {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
             color: Colors.grey[300],
+            image: DecorationImage(
+                image: AssetImage(
+                    "img/loginbtn.png"
+                ),
+                fit:BoxFit.cover
+            ),
             boxShadow: [
               BoxShadow(
                   color: Colors.grey.shade500,
