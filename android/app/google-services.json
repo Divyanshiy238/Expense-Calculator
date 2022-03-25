@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "826737232797",
+    "project_id": "fir-crud-app-595c3",
+    "storage_bucket": "fir-crud-app-595c3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:826737232797:android:c851f57206407a5adefd74",
+        "android_client_info": {
+          "package_name": "com.example.expense_calculator"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "826737232797-a5rq0ksth5sja9b6cm0vmquu93lthtb5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.expense_calculator",
+            "certificate_hash": "70bd7b7e213a17c5986fd0696a03c4ce370f1f19"
+          }
+        },
+        {
+          "client_id": "826737232797-r6jj7ts20k9ivl3rib0d35f433tu5t7n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKFek4z2i8x76I7-9i68bVKjKtTmef4f8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "826737232797-r6jj7ts20k9ivl3rib0d35f433tu5t7n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
