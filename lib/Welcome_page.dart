@@ -20,7 +20,7 @@ class WelcomePage extends StatelessWidget {
               decoration: BoxDecoration(
                   image: DecorationImage(
                       image: AssetImage(
-                          "img/signup.png"
+                          "img/loginbtn.png"
                       ),
                       fit:BoxFit.cover
                   )

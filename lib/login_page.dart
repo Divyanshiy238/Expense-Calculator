@@ -57,9 +57,9 @@ class _LoginPageState extends State<LoginPage> {
                       children: [
                         SizedBox(height:20,),
                         Text(
-                          "Welcome",
+                          "Expense Calculator",
                           style: TextStyle(
-                              fontSize: 60,
+                              fontSize: 50,
                               fontWeight: FontWeight.bold
                           ),
                         ),
@@ -71,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
                               color:Colors.grey[500]
                           ),
                         ),
-                        SizedBox(height:50,),
+                        SizedBox(height:35,),
                         Container(
                           decoration: BoxDecoration(
                               color:Colors.white,
@@ -150,7 +150,7 @@ class _LoginPageState extends State<LoginPage> {
                               )
                           ),
                         ),
-                        SizedBox(height: 20,),
+                        SizedBox(height: 10,),
                         Row(
                           children:[
                             Expanded(child: Container(),),
@@ -227,7 +227,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                SizedBox(height:w*0.08),
+                SizedBox(height:w*0.03),
                 RichText(text:TextSpan(
                     text:"Don\'t have an account?",
                     style: TextStyle(
