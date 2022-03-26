@@ -156,10 +156,17 @@ class _HomePageState extends State<HomePage> {
   Future<bool> fetchBalance() async {
     DocumentSnapshot balance = await FirebaseFirestore.instance.collection('balance').doc(AuthenticationHelper().id).get();
     print(balance.data());
-    Map<String, dynamic> data = balance.data() as Map<String, dynamic>;
-    Data.totalBalance = data['totalBalance'];
-    Data.totalExpenses = data['totalExpenses'];
-    Data.totalIncome = data['totalIncome'];
+    if(balance.data() == null){
+      Data.totalBalance = 0;
+      Data.totalExpenses = 0;
+      Data.totalIncome = 0;
+    }
+    else{
+      Map<String, dynamic> data = balance.data() as Map<String, dynamic>;
+      Data.totalBalance = data['totalBalance'];
+      Data.totalExpenses = data['totalExpenses'];
+      Data.totalIncome = data['totalIncome'];
+    }
     return true;
   }
 
