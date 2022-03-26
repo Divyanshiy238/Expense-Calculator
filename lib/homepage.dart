@@ -64,7 +64,7 @@ class _HomePageState extends State<HomePage> {
               Container(
                 padding: EdgeInsets.symmetric(vertical: 15),
                 child: StreamBuilder<QuerySnapshot>(
-                  stream: FirebaseFirestore.instance.collection(AuthenticationHelper().id).snapshots(),
+                  stream: FirebaseFirestore.instance.collection(AuthenticationHelper().email).snapshots(),
                   builder: (context, snapshot){
                     if(!snapshot.hasData){
                       return CircularProgressIndicator();
@@ -154,7 +154,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<bool> fetchBalance() async {
-    DocumentSnapshot balance = await FirebaseFirestore.instance.collection('balance').doc(AuthenticationHelper().id).get();
+    DocumentSnapshot balance = await FirebaseFirestore.instance.collection('balance').doc(AuthenticationHelper().email).get();
     print(balance.data());
     if(balance.data() == null){
       Data.totalBalance = 0;

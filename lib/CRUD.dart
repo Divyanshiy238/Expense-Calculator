@@ -4,11 +4,8 @@ import 'package:expense_calculator/auth_controller.dart';
 import 'package:expense_calculator/data.dart';
 
 class CRUD {
-  static final _balanceDb = FirebaseFirestore.instance.collection('balance');
-  static final _dataDb = FirebaseFirestore.instance.collection(AuthenticationHelper().id);
-
   static Future<bool> addItem(Map<String, dynamic> data) async {
-    await _dataDb.add(data);
+    await FirebaseFirestore.instance.collection(AuthenticationHelper().email).add(data);
 
     if(data['expenseOrIncome']){
       Data.totalBalance += int.parse(data['amount'].toString());
@@ -19,7 +16,7 @@ class CRUD {
       Data.totalExpenses += int.parse(data['amount'].toString());
     }
 
-    await _balanceDb.doc(AuthenticationHelper().id).set({
+    await FirebaseFirestore.instance.collection('balance').doc(AuthenticationHelper().email).set({
       'totalBalance' : Data.totalBalance,
       'totalIncome' : Data.totalIncome,
       'totalExpenses' : Data.totalExpenses
@@ -29,7 +26,7 @@ class CRUD {
   }
 
   static Future<bool> updateItem(String id, Map<String, dynamic> data, Map<String, dynamic> oldData) async {
-    await _dataDb.doc(id).update(data);
+    await FirebaseFirestore.instance.collection(AuthenticationHelper().email).doc(id).update(data);
 
     if(data['expenseOrIncome']){
       Data.totalBalance -= int.parse(oldData['amount'].toString());
@@ -49,7 +46,7 @@ class CRUD {
       Data.totalExpenses += int.parse(data['amount'].toString());
     }
 
-    await _balanceDb.doc(AuthenticationHelper().id).set({
+    await FirebaseFirestore.instance.collection('balance').doc(AuthenticationHelper().email).set({
       'totalBalance' : Data.totalBalance,
       'totalIncome' : Data.totalIncome,
       'totalExpenses' : Data.totalExpenses
@@ -59,7 +56,7 @@ class CRUD {
   }
 
   static Future<bool> deleteItem(String id, Map<String, dynamic> data) async {
-    await _dataDb.doc(id).delete();
+    await FirebaseFirestore.instance.collection(AuthenticationHelper().email).doc(id).delete();
 
     if(data['expenseOrIncome']){
       Data.totalBalance -= int.parse(data['amount'].toString());
@@ -70,7 +67,7 @@ class CRUD {
       Data.totalExpenses -= int.parse(data['amount'].toString());
     }
 
-    await _balanceDb.doc(AuthenticationHelper().id).set({
+    await FirebaseFirestore.instance.collection('balance').doc(AuthenticationHelper().email).set({
       'totalBalance' : Data.totalBalance,
       'totalIncome' : Data.totalIncome,
       'totalExpenses' : Data.totalExpenses
