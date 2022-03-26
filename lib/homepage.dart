@@ -64,7 +64,7 @@ class _HomePageState extends State<HomePage> {
               Container(
                 padding: EdgeInsets.symmetric(vertical: 15),
                 child: StreamBuilder<QuerySnapshot>(
-                  stream: FirebaseFirestore.instance.collection('allExpensesAndIncome').snapshots(),
+                  stream: FirebaseFirestore.instance.collection(AuthenticationHelper().id).snapshots(),
                   builder: (context, snapshot){
                     if(!snapshot.hasData){
                       return CircularProgressIndicator();
@@ -154,7 +154,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<bool> fetchBalance() async {
-    DocumentSnapshot balance = await FirebaseFirestore.instance.collection('balance').doc('data').get();
+    DocumentSnapshot balance = await FirebaseFirestore.instance.collection('balance').doc(AuthenticationHelper().id).get();
     print(balance.data());
     Map<String, dynamic> data = balance.data() as Map<String, dynamic>;
     Data.totalBalance = data['totalBalance'];
@@ -178,7 +178,7 @@ class _HomePageState extends State<HomePage> {
                     key: _formKey,
                     child: Column(
                       children: [
-                        Row(
+                        action == "Add" ? Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Text('Expense'),
@@ -192,7 +192,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                             Text('Income'),
                           ],
-                        ),
+                        ) : Container(),
                         SizedBox(
                           height: 5,
                         ),

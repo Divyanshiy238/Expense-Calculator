@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expense_calculator/auth_controller.dart';
 import 'package:expense_calculator/data.dart';
 
 class CRUD {
   static final _balanceDb = FirebaseFirestore.instance.collection('balance');
-  static final _dataDb = FirebaseFirestore.instance.collection('allExpensesAndIncome');
+  static final _dataDb = FirebaseFirestore.instance.collection(AuthenticationHelper().id);
 
   static Future<bool> addItem(Map<String, dynamic> data) async {
     await _dataDb.add(data);
@@ -18,7 +19,7 @@ class CRUD {
       Data.totalExpenses += int.parse(data['amount'].toString());
     }
 
-    await _balanceDb.doc('data').update({
+    await _balanceDb.doc(AuthenticationHelper().id).set({
       'totalBalance' : Data.totalBalance,
       'totalIncome' : Data.totalIncome,
       'totalExpenses' : Data.totalExpenses
@@ -48,7 +49,7 @@ class CRUD {
       Data.totalExpenses += int.parse(data['amount'].toString());
     }
 
-    await _balanceDb.doc('data').update({
+    await _balanceDb.doc(AuthenticationHelper().id).set({
       'totalBalance' : Data.totalBalance,
       'totalIncome' : Data.totalIncome,
       'totalExpenses' : Data.totalExpenses
@@ -69,7 +70,7 @@ class CRUD {
       Data.totalExpenses -= int.parse(data['amount'].toString());
     }
 
-    await _balanceDb.doc('data').update({
+    await _balanceDb.doc(AuthenticationHelper().id).set({
       'totalBalance' : Data.totalBalance,
       'totalIncome' : Data.totalIncome,
       'totalExpenses' : Data.totalExpenses
